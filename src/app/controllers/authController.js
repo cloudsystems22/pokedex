@@ -6,6 +6,9 @@ const authConfig = require('../../config/auth');
 const User = require('../models/user');
 const router = express.Router();
 
+const speakeasy = require('speakeasy');
+const qrcode = require('qrcode');
+
 const mailer = require('../../modules/mailer');
 
 
@@ -105,6 +108,50 @@ router.post('/reset_password', async (req, res) =>{
     } catch (err) {
         res.status(400).send({ error: 'Sua senha não foi alterada, tente novamente!'});
 
+    }
+});
+
+// Autenticação em dois fatores;
+router.post('/qrcode', (req, res) => {
+    try{
+        let secret = speakeasy.generateSecret({
+            name: "Pokedex",
+            length: 20
+        });
+        qrcode.toDataURL(secret.otpauth_url, (err, data) =>{
+            res.send({ secret:secret.base32, qrcode: data });
+        });
+    } catch (err){
+        res.status(400).send({ error: "Falha ao gerar qrcode!"})
+    }
+});
+
+router.post('/gerar-token', (req, res) => {
+    let { secret } = req.body;
+    try{
+        let token = speakeasy.totp({
+            secret: secret,
+            encoding: 'base32'
+        });
+        let remaning = (30 - Math.floor((new Date().getTime() / 1000.0 % 30)));
+        res.send({ token: token, time: remaning })
+    } catch (err){
+        res.status(400).send({ error: "Falha ao gerar token!"})
+    }
+})
+router.post('/verify', (req, res) => {
+    const { secret, token } = req.body;
+    console.log(token);
+    try{
+        let verificado = speakeasy.totp.verify({
+            secret: secret,
+            encoding: 'base32',
+            token: token,
+            window: 0
+        })
+        res.send({ auth: verificado })
+    } catch (err) {
+        res.status(400).send({error: "Erro de verificação!"})
     }
 })
 
