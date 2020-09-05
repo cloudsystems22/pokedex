@@ -114,9 +114,16 @@ router.post('/reset_password', async (req, res) =>{
 // Autenticação em dois fatores;
 router.post('/qrcode', (req, res) => {
     try{
+        const { email } = req.body
+
         let secret = speakeasy.generateSecret({
             name: "Pokedex",
             length: 20
+        });
+        await User.findByIdAndUpdate(user.id, {
+            '$set': {
+                secret: secret.base32,
+            }
         });
         qrcode.toDataURL(secret.otpauth_url, (err, data) =>{
             res.send({ secret:secret.base32, qrcode: data });
@@ -149,7 +156,10 @@ router.post('/verify', (req, res) => {
             token: token,
             window: 0
         })
-        res.send({ auth: verificado })
+        if(verificado)
+            let user = await User.find({ secret:secret })
+
+        res.send({ auth: verificado, usuario:user.email })
     } catch (err) {
         res.status(400).send({error: "Erro de verificação!"})
     }
