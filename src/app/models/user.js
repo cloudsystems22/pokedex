@@ -25,6 +25,10 @@ const UserSchema = new mongoose.Schema({
        type: Date,
        select: false,  
     },
+    secret:{
+        type: String,
+        select: false
+    },
     createdAt:{
         type:Date,
         default: Date.now,
