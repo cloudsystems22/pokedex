@@ -156,10 +156,9 @@ router.post('/verify', async (req, res) => {
             window: 0
         })
         if(verificado){
-            let user = await User.findOne({ secret });
+            let user = await User.findOne({ secret }).select('+secret');
+            res.send({ auth: verificado, user, token: generationToken({ id: user.id }) })
         }
-
-        res.send({ auth: verificado, user, token: generationToken({ id: user.id }) })
     } catch (err) {
         res.status(400).send({error: "Erro de verificação!"})
     }

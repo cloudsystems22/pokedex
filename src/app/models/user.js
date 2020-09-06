@@ -27,7 +27,6 @@ const UserSchema = new mongoose.Schema({
     },
     secret:{
         type: String,
-        select: false
     },
     createdAt:{
         type:Date,
