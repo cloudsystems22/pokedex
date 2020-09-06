@@ -112,10 +112,10 @@ router.post('/reset_password', async (req, res) =>{
 });
 
 // Autenticação em dois fatores;
-router.post('/qrcode', (req, res) => {
+router.post('/qrcode', async (req, res) => {
+    const { email } = req.body
     try{
-        const { email } = req.body
-
+        const user = await User.findOne({ email });
         let secret = speakeasy.generateSecret({
             name: "Pokedex",
             length: 20
@@ -146,9 +146,8 @@ router.post('/gerar-token', (req, res) => {
         res.status(400).send({ error: "Falha ao gerar token!"})
     }
 })
-router.post('/verify', (req, res) => {
+router.post('/verify', async (req, res) => {
     const { secret, token } = req.body;
-    console.log(token);
     try{
         let verificado = speakeasy.totp.verify({
             secret: secret,
@@ -156,8 +155,9 @@ router.post('/verify', (req, res) => {
             token: token,
             window: 0
         })
-        if(verificado)
-            let user = await User.find({ secret:secret })
+        if(verificado){
+            let user = await User.findOne({ secret });
+        }
 
         res.send({ auth: verificado, usuario:user.email })
     } catch (err) {
