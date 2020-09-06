@@ -148,19 +148,17 @@ router.post('/gerar-token', (req, res) => {
 })
 router.post('/verify', async (req, res) => {
     const { secret, token } = req.body;
-    try{
-        let verificado = speakeasy.totp.verify({
-            secret: secret,
-            encoding: 'base32',
-            token: token,
-            window: 0
-        })
-        if(verificado){
-            let user = await User.findOne({ secret }).select('+secret');
-            res.send({ auth: verificado, user, token: generationToken({ id: user.id }) })
-        }
-    } catch (err) {
-        res.status(400).send({error: "Erro de verificação!"})
+    let verificado = speakeasy.totp.verify({
+        secret: secret,
+        encoding: 'base32',
+        token: token,
+        window: 0
+    })
+    if(verificado){
+        let user = await User.findOne({ secret }).select('+secret');
+        res.send({ auth: verificado, user, token: generationToken({ id: user.id }) })
+    } else {
+        res.send({ error: "Erro na verificação!" })
     }
 
 })
