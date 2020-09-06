@@ -159,10 +159,11 @@ router.post('/verify', async (req, res) => {
             let user = await User.findOne({ secret });
         }
 
-        res.send({ auth: verificado, usuario:user.email })
+        res.send({ auth: verificado, user, token: generationToken({ id: user.id }) })
     } catch (err) {
         res.status(400).send({error: "Erro de verificação!"})
     }
+
 })
 
 module.exports = app => app.use('/auth', router);
