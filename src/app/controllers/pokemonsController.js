@@ -18,19 +18,21 @@ router.get('/', async (req, res) => {
         res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
     }
 });
-router.get('/:iduser', async (req, res) => {
+router.get('/usuario/:user', async (req, res) => {
     try{
-        let user = req.params.iduser;
-        const pokemons = await Pokemon.find({user}).populate('user');
+        let user = req.params.user;
+        console.log(user);
+        const pokemons = await Pokemon.find({user:user}).populate('user');
         return res.send({ pokemons });
     } catch(err) {
         res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
     }
 });
-router.get('/:name', async (req, res) => {
+router.get('/nome/:name', async (req, res) => {
     try{
         let name = req.params.name;
-        const pokemons = await Pokemon.find({name}).populate('user');
+        let user = req.params.user;
+        const pokemons = await Pokemon.find({user:req.userId, name:name}).populate('user');
         return res.send({ pokemons });
     } catch(err) {
         res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
