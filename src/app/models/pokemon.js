@@ -6,6 +6,9 @@ const PokemonSchema = new mongoose.Schema({
         ref:'User',
         require: true
     },
+    number: {
+        type: String,
+    },
     name: {
         type: String,
         unique: true,
