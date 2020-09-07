@@ -61,7 +61,6 @@ router.delete('/:id', async (req, res) => {
 });
 router.delete('/remove', async (req, res) => {
     try {
-        let id = req.params.id
         const pokemon = await Pokemon.remove();
         return res.send({ Ok: 'Registros removidos com sucesso!' });
     } catch(err) {
