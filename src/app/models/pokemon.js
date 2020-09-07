@@ -18,11 +18,9 @@ const PokemonSchema = new mongoose.Schema({
     types:[{
         type:String
     }],
-    fastAttacks:[{
-        name:{ type:String},
-        type:{ type:String},
-        damage:{ type:Number},
-    }],
+    baseAttack:{
+       type:String
+    },
     createdAt:{
         type:Date,
         default: Date.now,
