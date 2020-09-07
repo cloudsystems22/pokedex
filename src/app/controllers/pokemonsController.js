@@ -18,7 +18,24 @@ router.get('/', async (req, res) => {
         res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
     }
 });
-
+router.get('/:iduser', async (req, res) => {
+    try{
+        let user = req.params.iduser;
+        const pokemons = await Pokemon.find({user}).populate('user');
+        return res.send({ pokemons });
+    } catch(err) {
+        res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
+    }
+});
+router.get('/:name', async (req, res) => {
+    try{
+        let name = req.params.name;
+        const pokemons = await Pokemon.find({name}).populate('user');
+        return res.send({ pokemons });
+    } catch(err) {
+        res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
+    }
+});
 router.get('/:id', async (req, res) => {
     try {
         let id = req.params.id
@@ -39,7 +56,6 @@ router.post('/create', async (req, res) => {
         return res.status(400).send({ error: "Erro ao criar o cadastro desse pokemon"})
     }
 });
-
 router.put('/:id', async (req, res) => {
     try {
         let id = req.params.id
@@ -49,7 +65,6 @@ router.put('/:id', async (req, res) => {
         res.status(400).send({ error: "Erro ao atualizar esse pokemon!"});
     }
 });
-
 router.delete('/:id', async (req, res) => {
     try {
         let id = req.params.id
