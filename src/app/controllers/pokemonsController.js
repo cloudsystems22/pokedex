@@ -18,11 +18,11 @@ router.get('/', async (req, res) => {
         res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
     }
 });
-router.get('/usuario/:user', async (req, res) => {
+router.get('/usuario', async (req, res) => {
     try{
         let user = req.params.user;
         console.log(user);
-        const pokemons = await Pokemon.find({user:user}).populate('user');
+        const pokemons = await Pokemon.find({user:req.userId}).populate('user');
         return res.send({ pokemons });
     } catch(err) {
         res.status(400).send({ error: "Erro ao exibir lista dos meus pokemons!"});
