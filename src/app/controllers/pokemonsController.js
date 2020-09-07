@@ -59,5 +59,14 @@ router.delete('/:id', async (req, res) => {
         res.status(400).send({ error: "Erro ao excluir esse pokemon!"});
     }
 });
+router.delete('/remove', async (req, res) => {
+    try {
+        let id = req.params.id
+        const pokemon = await Pokemon.remove();
+        return res.send({ Ok: 'Registros removidos com sucesso!' });
+    } catch(err) {
+        res.status(400).send({ error: "Erro ao excluir esses registros!"});
+    }
+});
 
 module.exports = app => app.use('/pokemons', router);
