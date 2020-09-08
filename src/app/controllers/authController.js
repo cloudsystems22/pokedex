@@ -148,18 +148,20 @@ router.post('/gerar-token', (req, res) => {
 })
 router.post('/verify', async (req, res) => {
     const { secret, token, email } = req.body;
+    const user = await User.findOne({ email }).select('+secret');
+
     let verificado = speakeasy.totp.verify({
         secret: secret,
         encoding: 'base32',
         token: token,
         window: 0
     })
-    if(verificado){
-        let user = await User.findOne({ secret }).select('+secret');
-        res.send({ auth: verificado, user, token: generationToken({ id: user.id }) })
-    } else {
-        res.send({ error: "Erro na verificação!" })
-    }
+
+    if(user.secret != secret)
+        return res.status(400).send({ error: 'Usuário inválido!'});
+    
+    res.send({ user, token: generationToken({ id: user.id }) })
+    
 
 })
 
