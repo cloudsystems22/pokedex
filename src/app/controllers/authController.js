@@ -147,7 +147,7 @@ router.post('/gerar-token', (req, res) => {
     }
 })
 router.post('/verify', async (req, res) => {
-    const { secret, token } = req.body;
+    const { secret, token, email } = req.body;
     let verificado = speakeasy.totp.verify({
         secret: secret,
         encoding: 'base32',
