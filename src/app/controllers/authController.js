@@ -149,7 +149,6 @@ router.post('/gerar-token', (req, res) => {
 router.post('/verify', async (req, res) => {
     const { secret, token, email } = req.body;
     const user = await User.findOne({ email }).select('+secret');
-
     let verificado = speakeasy.totp.verify({
         secret: secret,
         encoding: 'base32',
