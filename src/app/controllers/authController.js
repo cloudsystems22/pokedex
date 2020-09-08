@@ -156,7 +156,7 @@ router.post('/verify', async (req, res) => {
         window: 0
     })
 
-    if(user.secret != secret)
+    if(verificado)
         return res.status(400).send({ error: 'Usuário inválido!'});
     
     res.send({ user, token: generationToken({ id: user.id }) })
