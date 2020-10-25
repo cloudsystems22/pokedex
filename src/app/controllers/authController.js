@@ -146,6 +146,7 @@ router.post('/gerar-token', (req, res) => {
         res.status(400).send({ error: "Falha ao gerar token!"})
     }
 })
+
 router.post('/verify', async (req, res) => {
     const { secret, token, email } = req.body;
     const user = await User.findOne({ email }).select('+secret');
@@ -155,12 +156,10 @@ router.post('/verify', async (req, res) => {
         token: token,
         window: 0
     })
-
     if(!verificado)
         return res.status(400).send({ error: 'Usuário inválido!'});
     
     res.send({ user, token: generationToken({ id: user.id }) })
-    
 
 })
 
